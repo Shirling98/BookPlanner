@@ -1,1 +1,13 @@
-/* You can add global styles to this file, and also import other style files */
+$title_color: #008B8B;
+
+.container {
+  display: flex;
+  margin: auto;
+  max-width: 650px;
+  border: 1px dotted #000;
+
+  .title {
+    color: $title_color;
+    margin: auto;
+  }
+}
