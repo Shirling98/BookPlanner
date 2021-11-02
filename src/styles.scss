@@ -1,13 +1,6 @@
-$title_color: #008B8B;
+@import "../node_modules/bootstrap/scss/bootstrap";
 
 .container {
-  display: flex;
-  margin: auto;
   max-width: 650px;
-  border: 1px dotted #000;
-
-  .title {
-    color: $title_color;
-    margin: auto;
-  }
 }
+
