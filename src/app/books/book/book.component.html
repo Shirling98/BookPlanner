@@ -1,1 +1,31 @@
-<p>book works!</p>
+<div class="container">
+  <form [formGroup]="formBook" (ngSubmit)="submit()" >
+
+    <div class="mb-3">
+      <label for="nameBook" class="form-label">Название книги</label>
+      <input type="text" class="form-control" id="nameBook" formControlName="name">
+    </div>
+    <div class="mb-3">
+      <label for="authorBook" class="form-label">Автор книги</label>
+      <input type="text" class="form-control" id="authorBook" formControlName="author">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Жанр книги</label>
+      <select class="form-select" aria-label="Default select example" formControlName="genre">
+        <option selected>Выберите жанр книги</option>
+        <option value="Фантастика">Фантастика</option>
+        <option value="Психология">Психология</option>
+        <option value="Детективы">Детективы</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="descriptionBook" class="form-label">Описание книги</label>
+      <textarea class="form-control" id="descriptionBook" rows="3" formControlName="description"></textarea>
+    </div>
+    <div class="mb-3 form-check">
+      <input type="checkbox" class="form-check-input" id="readBook" formControlName="read">
+      <label class="form-check-label" for="readBook">Книга прочитана</label>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>

@@ -4,6 +4,7 @@ import {RouterModule} from "@angular/router";
 import {HeaderComponent} from "../shared/components/header/header.component";
 import {BookComponent} from "./book/book.component";
 import {BooksListComponent} from './books-list/books-list.component';
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -12,6 +13,8 @@ import {BooksListComponent} from './books-list/books-list.component';
   ],
   imports: [
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     RouterModule.forChild([
 
       {path: 'list', component: BooksListComponent},

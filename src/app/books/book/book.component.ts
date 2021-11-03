@@ -1,15 +1,34 @@
 import { Component, OnInit } from '@angular/core';
+import {FormControl, FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-book',
   templateUrl: './book.component.html',
   styleUrls: ['./book.component.scss']
 })
-export class BookComponent implements OnInit {
+export class BookComponent{
 
-  constructor() { }
+  // @ts-ignore
+  formBook: FormGroup;
 
-  ngOnInit(): void {
+  constructor() {
+    this.createForm()
   }
 
+  private createForm() {
+    this.formBook = new FormGroup({
+      name: new FormControl(null),
+      author: new FormControl(null),
+      genre: new FormControl(null),
+      description: new FormControl(null),
+      read: new FormControl(null),
+    })
+  }
+
+  submit() {
+    const formData = {...this.formBook.value}
+    console.log('Данные с формы', formData)
+    this.formBook.reset()
+
+  }
 }
