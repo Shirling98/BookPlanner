@@ -1,34 +1,49 @@
-import { Component, OnInit } from '@angular/core';
-import {FormControl, FormGroup} from "@angular/forms";
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+
+interface IBook {
+  name: string
+  author: string
+  genre: string
+  description: string
+  read: boolean
+  id?: number
+}
 
 @Component({
   selector: 'app-book',
   templateUrl: './book.component.html',
   styleUrls: ['./book.component.scss']
 })
-export class BookComponent{
+export class BookComponent implements OnInit {
 
-  // @ts-ignore
-  formBook: FormGroup;
+  genreList = [
+    {genre: 'Психология'},
+    {genre: 'Фантастика'},
+    {genre: 'Детектив'}
+  ]
 
-  constructor() {
-    this.createForm()
+  formBook!: FormGroup
+
+  constructor(private formBuilder: FormBuilder) {
+
   }
 
-  private createForm() {
-    this.formBook = new FormGroup({
-      name: new FormControl(null),
-      author: new FormControl(null),
-      genre: new FormControl(null),
-      description: new FormControl(null),
-      read: new FormControl(false),
+  ngOnInit(): void {
+    this.formBook = this.formBuilder.group({
+      name: ['', Validators.required],
+      author: ['', Validators.required],
+      genre: ['', Validators.required],
+      description: ['', Validators.required],
+      read: [false, Validators.required],
     })
   }
 
   submit() {
-    const formData = {...this.formBook.value}
+    const formData: IBook = {...this.formBook.value}
     console.log('Данные с формы', formData)
-    this.formBook.reset()
-
+    this.formBook.reset();
   }
+
+
 }

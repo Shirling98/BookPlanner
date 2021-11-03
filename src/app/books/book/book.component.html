@@ -1,5 +1,5 @@
 <div class="container">
-  <form [formGroup]="formBook" (ngSubmit)="submit()" >
+  <form [formGroup]="formBook" (ngSubmit)="submit()">
 
     <div class="mb-3">
       <label for="nameBook" class="form-label">Название книги</label>
@@ -11,11 +11,18 @@
     </div>
     <div class="mb-3">
       <label class="form-label">Жанр книги</label>
-      <select class="form-select" aria-label="Default select example" formControlName="genre">
+      <select
+        class="form-select"
+        aria-label="Default select example"
+        formControlName="genre"
+      >
         <option selected>Выберите жанр книги</option>
-        <option value="Фантастика">Фантастика</option>
-        <option value="Психология">Психология</option>
-        <option value="Детективы">Детективы</option>
+        <option
+          *ngFor="let g of genreList"
+          [ngValue]="g"
+        >
+          {{g.genre}}
+        </option>
       </select>
     </div>
     <div class="mb-3">
