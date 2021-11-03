@@ -21,7 +21,7 @@ export class BookComponent{
       author: new FormControl(null),
       genre: new FormControl(null),
       description: new FormControl(null),
-      read: new FormControl(null),
+      read: new FormControl(false),
     })
   }
 
