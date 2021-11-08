@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {AngularFireDatabase} from "@angular/fire/compat/database";
+import {Observable} from "rxjs";
 
 interface IBook {
   name: string
@@ -17,16 +19,21 @@ interface IBook {
 })
 export class BookComponent implements OnInit {
 
-  genreList = [
+
+ /* genreList = [
     {genre: 'Психология'},
     {genre: 'Фантастика'},
     {genre: 'Детектив'}
-  ]
+  ]*/
+
 
   formBook!: FormGroup
+  genreList: Observable<any>
 
-  constructor(private formBuilder: FormBuilder) {
-
+  constructor(private formBuilder: FormBuilder, private db: AngularFireDatabase) {
+    //this.genre$= GenreService.getGenre();
+    this.genreList = db.list('genreList').snapshotChanges()
+    console.log(this.genreList)
   }
 
   ngOnInit(): void {

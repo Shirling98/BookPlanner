@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "bookplanner-55390": {
+      "hosting": {
+        "BookPlanner": [
+          "bookplanner-55390"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "bookplanner-55390"
+  }
+}
