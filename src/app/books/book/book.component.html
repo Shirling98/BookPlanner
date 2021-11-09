@@ -18,10 +18,10 @@
       >
         <option selected>Выберите жанр книги</option>
         <option
-          *ngFor="let g of genreList | async"
-          [ngValue]="g"
+          *ngFor="let g of getGenres | async"
+          [ngValue]="g.key"
         >
-          {{ g.payload | json}}
+          {{ g.val }}
         </option>
       </select>
     </div>
