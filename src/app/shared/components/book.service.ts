@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {FbCreateResponse, IBook, IGenre} from "./interface";
 import {environment} from "../../../environments/environment";
-import {map, tap} from "rxjs/operators";
+import {map} from "rxjs/operators";
 import {AngularFireDatabase} from "@angular/fire/compat/database";
 
 @Injectable({providedIn: 'root'})
