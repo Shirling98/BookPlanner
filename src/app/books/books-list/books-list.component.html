@@ -1,1 +1,24 @@
-<p>books-list works!</p>
+<div class="container-sm">
+  <table class="table table-hover">
+    <thead class="table-info">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Название книги</th>
+      <th scope="col">Автор</th>
+      <th scope="col">Жанр</th>
+      <th scope="col">Описание книги</th>
+      <th scope="col">Прочитана?</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let book of getBooks | async; let idx = index">
+      <th>{{ idx + 1 }}</th>
+      <th>{{ book.name }}</th>
+      <th>{{ book.author }}</th>
+      <th>{{ book.genre }}</th>
+      <th>{{ book.description }}</th>
+      <th>{{ book.read ? 'Да' : 'Нет' }}</th>
+    </tr>
+    </tbody>
+  </table>
+</div>

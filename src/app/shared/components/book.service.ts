@@ -34,6 +34,17 @@ export class BookService {
       }))
   }
 
+  getBooks(): Observable<IBook[]> {
+    return this.http.get(`${environment.firebase.databaseURL}/books.json`)
+      .pipe(map((response: { [key: string]: any }) => {
+          return Object
+            .keys(response)
+            .map(key => ({
+              ...response[key],
+              id: key
+            }))
+      }))
+  }
 }
 
 

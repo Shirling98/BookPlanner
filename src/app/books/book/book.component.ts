@@ -13,11 +13,8 @@ import {BookService} from "../../shared/components/book.service";
 })
 export class BookComponent implements OnInit{
 
-
   formBook!: FormGroup
   getGenres: Observable<IGenre[]> = EMPTY
-
-
 
   constructor(private formBuilder: FormBuilder, private db: AngularFireDatabase, private bookService: BookService) {
       }
