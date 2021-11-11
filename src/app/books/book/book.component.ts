@@ -1,9 +1,12 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Renderer2} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AngularFireDatabase} from "@angular/fire/compat/database";
 import {EMPTY, Observable, Subscription} from "rxjs";
 import {IBook, IGenre} from "../../shared/components/interface";
 import {BookService} from "../../shared/components/book.service";
+import {ActivatedRoute, Router} from "@angular/router";
+import {switchMap} from "rxjs/operators";
+import {Title} from "@angular/platform-browser";
 
 
 @Component({
@@ -11,15 +14,29 @@ import {BookService} from "../../shared/components/book.service";
   templateUrl: './book.component.html',
   styleUrls: ['./book.component.scss']
 })
-export class BookComponent implements OnInit{
+export class BookComponent implements OnInit {
 
   formBook!: FormGroup
   getGenres: Observable<IGenre[]> = EMPTY
+  book: IBook[] = []
+  submitted = false
+  bookId = ''
+  isCreate = false
 
-  constructor(private formBuilder: FormBuilder, private db: AngularFireDatabase, private bookService: BookService) {
-      }
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private db: AngularFireDatabase,
+    private bookService: BookService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {
+  }
 
   ngOnInit(): void {
+    this.isCreate = true
+    this.getGenres = this.bookService.getGenres()
+
     this.formBook = this.formBuilder.group({
       name: ['', Validators.required],
       author: ['', Validators.required],
@@ -28,25 +45,56 @@ export class BookComponent implements OnInit{
       read: [false, Validators.required],
     })
 
-    this.getGenres = this.bookService.getGenres()
+    this.route.params
+      .subscribe((params) => {
+        this.bookId = params.id
+        if (this.bookId) {
+          this.isCreate = false
+          this.bookService.getById(params['id'])
+            .subscribe((book) => {
+              this.formBook.patchValue({
+                ...book
+              })
+            })
+        }
+      })
+
+    // this.route.params
+    //   .pipe(switchMap((params) => {
+    //     this.bookId = params.id
+    //     if (this.bookId) {
+    //       return this.bookService.getById(params['id'])
+    //     } else {
+    //       return EMPTY
+    //     }
+    //   })).subscribe((book) => {
+    //   if (book) {
+    //     this.formBook.patchValue({
+    //       ...book
+    //     })
+    //   }
+    // })
   }
 
   submit() {
     const formData: IBook = {...this.formBook.value}
-    console.log('Данные с формы', formData)
+    this.submitted = true
 
+    if (this.bookId) {
+      this.bookService.update({
+        id: this.bookId,
+        ...formData
 
-    const book: IBook = {
-      name: this.formBook.value.name,
-      author: this.formBook.value.author,
-      genre: this.formBook.value.genre,
-      description: this.formBook.value.description,
-      read: this.formBook.value.read,
+      }).subscribe(async () => {
+        this.submitted = false
+        await this.router.navigate(['/books', 'list'])
+      })
+
+    } else {
+      this.bookService.create(formData).subscribe(() => {
+        this.formBook.reset()
+      })
     }
-
-    this.bookService.create(book).subscribe(() => {
-      this.formBook.reset()
-    })
   }
 
 }

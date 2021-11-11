@@ -1,3 +1,12 @@
+<h1
+  class="text-center"
+  *ngIf="isCreate"
+>Добавление книги</h1>
+<h1
+  class="text-center"
+  *ngIf="!isCreate"
+>Редактирование книги</h1>
+<!--<div *ngIf="isCreate; then create else edit"></div>-->
 <div class="container">
   <form [formGroup]="formBook" (ngSubmit)="submit()">
 
@@ -33,6 +42,15 @@
       <input type="checkbox" class="form-check-input" id="readBook" formControlName="read">
       <label class="form-check-label" for="readBook">Книга прочитана</label>
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button
+      type="submit"
+      class="btn btn-primary"
+      [disabled]="formBook.invalid || submitted"
+    >Submit
+    </button>
   </form>
 </div>
+
+
+<!--<ng-template #create>Добавление книги</ng-template>-->
+<!--<ng-template #edit>Редактирование книги</ng-template>-->
