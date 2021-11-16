@@ -10,6 +10,9 @@ import {IBook} from "../../shared/components/interface";
 export class BooksListComponent implements OnInit {
 
   books: IBook[] = []
+  searchStr = '';
+  isLoad = false;
+  genres: { [key: string]: string } = {}
 
   constructor(
     private bookService: BookService) {
@@ -17,10 +20,22 @@ export class BooksListComponent implements OnInit {
 
   ngOnInit() {
     this.getBooks()
+    this.getGenres()
   }
 
+  getGenres() {
+    this.bookService.getGenres().subscribe((genres) => {
+      genres
+        .map((genre) => {
+          this.genres[genre.key] = genre.val
+        })
+    })
+  }
+
+
   getBooks() {
-    this.bookService.getBooks().subscribe((books) => {
+    this.bookService.getBooks(this.searchStr).subscribe((books) => {
+      this.isLoad = true
       this.books = books
     })
   }
@@ -32,7 +47,11 @@ export class BooksListComponent implements OnInit {
         this.getBooks()
       })
     }
+  }
 
+  searchBtn() {
+    this.isLoad = false
+    this.getBooks()
   }
 
 }

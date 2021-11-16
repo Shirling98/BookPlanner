@@ -1,5 +1,18 @@
 <h1 class="text-center">Список книг</h1>
 <div class="container-sm">
+  <div class="input-group mb-3">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Поиск..."
+      aria-describedby="basic-addon1"
+      [(ngModel)]="searchStr"
+    >
+    <button class="btn btn-info"
+            (click)="searchBtn()"
+    >Найти
+    </button>
+  </div>
   <table class="table table-hover">
     <thead class="table-info">
     <tr>
@@ -17,7 +30,7 @@
       <th>{{ idx + 1 }}</th>
       <th>{{ book.name }}</th>
       <th>{{ book.author }}</th>
-      <th>{{ book.genre }}</th>
+      <th>{{ genres[book.genre] }}</th>
       <th>{{ book.description }}</th>
       <th>{{ book.read ? 'Да' : 'Нет' }}</th>
       <th>
@@ -27,10 +40,23 @@
         >Редактировать
         </button>
         <button class="btn btn-info"
-            (click)="removeBook(book.id)"
-        >Удалить</button>
+                (click)="removeBook(book.id)"
+        >Удалить
+        </button>
       </th>
     </tr>
     </tbody>
   </table>
+
+  <div
+    *ngIf="!books.length && isLoad"
+    class="text-center display-6"
+  >Данных нет
+  </div>
+  <div
+    *ngIf="!isLoad"
+    class="text-center display-6"
+  >Загрузка данных
+  </div>
 </div>
+
