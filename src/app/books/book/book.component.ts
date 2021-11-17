@@ -1,12 +1,10 @@
-import {Component, OnInit, Renderer2} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AngularFireDatabase} from "@angular/fire/compat/database";
-import {EMPTY, Observable, Subscription} from "rxjs";
+import {EMPTY, Observable} from "rxjs";
 import {IBook, IGenre} from "../../shared/components/interface";
 import {BookService} from "../../shared/components/book.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {switchMap} from "rxjs/operators";
-import {Title} from "@angular/platform-browser";
 
 
 @Component({

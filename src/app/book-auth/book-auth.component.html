@@ -1,0 +1,39 @@
+<form class="container" [formGroup]="formAuth" (ngSubmit)="submit()">
+
+   <div class="mb-3">
+    <label for="exampleInputEmail1" class="form-label">Email</label>
+    <input type="email" class="form-control" id="exampleInputEmail1" formControlName="email">
+    <div
+      *ngIf="formAuth.get('email').touched && formAuth.get('email').invalid"
+      class="form-text"
+    >
+      <small
+        *ngIf="formAuth.get('email').errors.required"
+      >Введите email</small>
+      <small
+        *ngIf="formAuth.get('email').errors.email"
+      >Введите корректный Email</small>
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputPassword1" class="form-label">Пароль</label>
+    <input type="password" class="form-control" id="exampleInputPassword1" formControlName="password">
+    <div
+      *ngIf="formAuth.get('password').touched && formAuth.get('password').invalid"
+      class="form-text"
+    >
+      <small
+        *ngIf="formAuth.get('password').errors.required"
+      >Введите пароль</small>
+      <small
+        *ngIf="formAuth.get('password').errors.minlength"
+      >Пароль должен быть не менее {{formAuth.get('password').errors.minlength.requiredLength}} символов</small>
+    </div>
+  </div>
+  <button
+    type="submit"
+    class="btn btn-primary"
+    [disabled]="formAuth.invalid || submitted"
+  >Войти
+  </button>
+</form>
