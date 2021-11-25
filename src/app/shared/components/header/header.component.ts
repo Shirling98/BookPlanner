@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {Router} from "@angular/router";
-import {AuthService} from "../../services/auth.service";
+import {AuthService} from "../../../auth/services/auth.service";
 
 @Component({
   selector: 'app-header',
@@ -10,16 +9,13 @@ import {AuthService} from "../../services/auth.service";
 export class HeaderComponent implements OnInit {
 
   constructor(
-    private router: Router,
-    private auth: AuthService
+    public auth: AuthService,
   ) { }
 
   ngOnInit(): void {
   }
 
-  logout(event: Event) {
-    event.preventDefault();
-    this.auth.logout();
-    this.router.navigate(['auth']);
+  logout() {
+    this.auth.logout()
   }
 }

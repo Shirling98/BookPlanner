@@ -1,5 +1,8 @@
-<h1 class="text-center">Список книг</h1>
 <div class="container-sm">
+  <div class="row">
+    <div class="text-end pos">Пользователь: {{auth.userInfo()}}</div>
+  </div>
+  <h1 class="text-center">Список книг</h1>
   <div class="input-group mb-3">
     <input
       type="text"
@@ -22,7 +25,10 @@
       <th scope="col">Жанр</th>
       <th scope="col">Описание книги</th>
       <th scope="col">Прочитана?</th>
-      <th scope="col">Действие</th>
+      <th
+        *ngIf="auth.isAuthenticated()"
+        scope="col">Действие
+      </th>
     </tr>
     </thead>
     <tbody>
@@ -33,7 +39,7 @@
       <th>{{ genres[book.genre] }}</th>
       <th>{{ book.description }}</th>
       <th>{{ book.read ? 'Да' : 'Нет' }}</th>
-      <th>
+      <th *ngIf="auth.isAuthenticated()">
         <button type="submit"
                 class="btn btn-info"
                 [routerLink]="['/books', 'edit', book.id]"

@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {BookService} from "../../shared/components/book.service";
-import {IBook} from "../../shared/components/interface";
+import {BookService} from "../../services/book.service";
+import {IBook} from "../../interfaces/bookInterface";
+import {AuthService} from "../../../auth/services/auth.service";
 
 @Component({
   selector: 'app-books-list',
@@ -15,7 +16,8 @@ export class BooksListComponent implements OnInit {
   genres: { [key: string]: string } = {}
 
   constructor(
-    private bookService: BookService) {
+    private bookService: BookService,
+    public auth: AuthService) {
   }
 
   ngOnInit() {

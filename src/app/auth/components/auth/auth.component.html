@@ -1,6 +1,25 @@
 <form class="container" [formGroup]="formAuth" (ngSubmit)="submit()">
 
-   <div class="mb-3">
+  <h2 class="text-center">Войдите с помощью</h2>
+  <div class="row">
+    <div class="btn white darken-4 col s10 m4">
+      <a
+        class="btn btn-outline-dark google-btn"
+        role="button"
+        (click)="googleLogin()"
+      >
+
+        <img class="google-btn-img" src="assets/images/Google_Logo.svg.png" alt="google logo">
+        Login with Google
+      </a>
+    </div>
+  </div>
+
+  <hr>
+
+  <h2 class="text-center">Введите логин/пароль</h2>
+
+  <div class="mb-3">
     <label for="exampleInputEmail1" class="form-label">Email</label>
     <input type="email" class="form-control" id="exampleInputEmail1" formControlName="email">
     <div
@@ -30,10 +49,17 @@
       >Пароль должен быть не менее {{formAuth.get('password').errors.minlength.requiredLength}} символов</small>
     </div>
   </div>
-  <button
-    type="submit"
-    class="btn btn-primary"
-    [disabled]="formAuth.invalid || submitted"
-  >Войти
-  </button>
+  <div class="row">
+    <div class="text-center">
+      <button
+        type="submit"
+        class="btn btn-outline-secondary width"
+        [disabled]="formAuth.invalid || submitted"
+      >Войти
+      </button>
+    </div>
+  </div>
+
 </form>
+
+

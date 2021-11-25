@@ -3,14 +3,25 @@
     <a class="navbar-brand" routerLink="/">BookPlanner</a>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="nav nav-pills">
-        <li class="nav-item" >
-          <a class="nav-link" aria-current="page" [routerLink]="['/books', 'list']" routerLinkActive="active">Список книг</a>
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" [routerLink]="['/books', 'list']" routerLinkActive="active">Список
+            книг</a>
         </li>
-        <li class="nav-item" >
+        <li class="nav-item">
           <a class="nav-link" [routerLink]="['/books', 'create']" routerLinkActive="active">Добавить книгу</a>
         </li>
-        <li class="nav-item" >
-          <a class="nav-link" href="#" (click)="logout($event)">Выйти</a>
+        <li class="nav-item">
+          <a
+            *ngIf="auth.isAuthenticated()"
+            class="nav-link position"
+            (click)="logout()"
+          >Выйти</a>
+          <a
+            *ngIf="!auth.isAuthenticated()"
+            class="nav-link position"
+            (click)="logout()"
+          >Войти</a>
+
         </li>
       </ul>
     </div>

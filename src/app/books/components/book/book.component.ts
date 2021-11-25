@@ -2,8 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AngularFireDatabase} from "@angular/fire/compat/database";
 import {EMPTY, Observable} from "rxjs";
-import {IBook, IGenre} from "../../shared/components/interface";
-import {BookService} from "../../shared/components/book.service";
+import {IBook, IGenre} from "../../interfaces/bookInterface";
+import {BookService} from "../../services/book.service";
 import {ActivatedRoute, Router} from "@angular/router";
 
 
