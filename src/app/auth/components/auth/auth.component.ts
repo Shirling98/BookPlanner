@@ -41,14 +41,14 @@ export class AuthComponent implements OnInit {
   }
 
   submit() {
-    console.log(this.formAuth);
+    this.submitted = true
+    const user: IUser = {...this.formAuth.value}
     if (this.formAuth.invalid) {
       return
+    } else {
+      this.submitted = false
     }
-    this.submitted = true
-
-    const user: IUser = {...this.formAuth.value}
-
     this.auth.login(user)
+
   }
 }

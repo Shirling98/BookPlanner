@@ -14,6 +14,7 @@ export class BooksListComponent implements OnInit {
   searchStr = '';
   isLoad = false;
   genres: { [key: string]: string } = {}
+  name: string = 'Поиск по наименованию книги'
 
   constructor(
     private bookService: BookService,
@@ -34,9 +35,8 @@ export class BooksListComponent implements OnInit {
     })
   }
 
-
-  getBooks() {
-    this.bookService.getBooks(this.searchStr).subscribe((books) => {
+  getBooks(str: string = '') {
+    this.bookService.getBooks(str).subscribe((books) => {
       this.isLoad = true
       this.books = books
     })
@@ -45,15 +45,12 @@ export class BooksListComponent implements OnInit {
   removeBook(id: string | undefined) {
     if (id) {
       this.bookService.remove(id).subscribe(() => {
-        //this.books = this.books.filter(book => book.id !== id)
         this.getBooks()
       })
     }
   }
 
-  searchBtn() {
-    this.isLoad = false
-    this.getBooks()
+  getList(str: string) {
+    this.getBooks(str)
   }
-
 }

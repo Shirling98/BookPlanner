@@ -5,6 +5,7 @@ import {EMPTY, Observable} from "rxjs";
 import {IBook, IGenre} from "../../interfaces/bookInterface";
 import {BookService} from "../../services/book.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {catchError} from "rxjs/operators";
 
 
 @Component({
@@ -28,8 +29,7 @@ export class BookComponent implements OnInit {
     private bookService: BookService,
     private route: ActivatedRoute,
     private router: Router
-  ) {
-  }
+  ) { }
 
   ngOnInit(): void {
     this.isCreate = true
@@ -48,30 +48,18 @@ export class BookComponent implements OnInit {
         this.bookId = params.id
         if (this.bookId) {
           this.isCreate = false
-          this.bookService.getById(params['id'])
-            .subscribe((book) => {
-              this.formBook.patchValue({
-                ...book
-              })
-            })
+          this.getBook()
         }
       })
+  }
 
-    // this.route.params
-    //   .pipe(switchMap((params) => {
-    //     this.bookId = params.id
-    //     if (this.bookId) {
-    //       return this.bookService.getById(params['id'])
-    //     } else {
-    //       return EMPTY
-    //     }
-    //   })).subscribe((book) => {
-    //   if (book) {
-    //     this.formBook.patchValue({
-    //       ...book
-    //     })
-    //   }
-    // })
+  getBook() {
+    this.bookService.getById(this.bookId)
+      .subscribe((book) => {
+        this.formBook.patchValue({
+          ...book
+        })
+      })
   }
 
   submit() {
@@ -83,7 +71,12 @@ export class BookComponent implements OnInit {
         id: this.bookId,
         ...formData
 
-      }).subscribe(async () => {
+      })
+        .pipe(catchError( (error) => {
+          this.submitted = false
+          return error
+        }))
+        .subscribe(async () => {
         this.submitted = false
         await this.router.navigate(['/books', 'list'])
       })
@@ -94,5 +87,4 @@ export class BookComponent implements OnInit {
       })
     }
   }
-
 }

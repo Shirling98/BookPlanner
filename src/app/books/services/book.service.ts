@@ -34,18 +34,6 @@ export class BookService {
       }))
   }
 
-  // getBooks(): Observable<IBook[]> {
-  //   return this.http.get(`${environment.firebase.databaseURL}/books.json`)
-  //     .pipe(map((response: { [key: string]: any }) => {
-  //       return Object
-  //         .keys(response)
-  //         .map(key => ({
-  //           ...response[key],
-  //           id: key
-  //         }))
-  //     }))
-  // }
-
   getBooks(search: string): Observable<any[]> {
     return this.db.list<IBook>('books', (ref) => this.booksFilter(ref, search)).snapshotChanges()
       .pipe(map((response) => {
@@ -67,7 +55,6 @@ export class BookService {
 
   getById(id: string): Observable<IBook> {
     return this.http.get<IBook>(`${environment.firebase.databaseURL}/books/${id}.json`)
-
   }
 
   update(book: IBook): Observable<IBook> {
@@ -77,7 +64,6 @@ export class BookService {
   remove(id: string): Observable<void> {
     return this.http.delete<void>(`${environment.firebase.databaseURL}/books/${id}.json`)
   }
-
 }
 
 

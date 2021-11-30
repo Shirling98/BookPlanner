@@ -6,8 +6,10 @@ import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {getAuth, signInWithEmailAndPassword, signInWithPopup} from "@angular/fire/auth";
 import firebase from "firebase/compat/app";
 import {Router} from "@angular/router";
+import {environment} from "../../../environments/environment";
 
-
+//фиксит ошибку Firebase: No Firebase App '[DEFAULT]' has been created angular
+firebase.initializeApp(environment.firebase);
 
 @Injectable()
 export class AuthService {
@@ -51,6 +53,10 @@ export class AuthService {
 
   userInfo() {
     const auth = getAuth();
-    return auth.currentUser.email
+    if (auth.currentUser) {
+      return auth?.currentUser?.email
+    } else {
+      return null
+    }
   }
 }

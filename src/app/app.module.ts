@@ -1,14 +1,15 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-import {AngularFireModule} from "@angular/fire/compat";
 import {HttpClientModule} from "@angular/common/http";
-import {AppRoutingModule} from './app-routing.module';
+import {AngularFireModule} from "@angular/fire/compat";
 
+import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {BooksModule} from "./books/books.module";
 import {HeaderComponent} from "./shared/components/header/header.component";
 import {environment} from "../environments/environment";
 import {AuthModule} from "./auth/auth.module";
+
 
 @NgModule({
   declarations: [
@@ -22,7 +23,6 @@ import {AuthModule} from "./auth/auth.module";
     AngularFireModule.initializeApp(environment.firebase),
     HttpClientModule,
     AuthModule,
-
   ],
   providers: [],
   bootstrap: [AppComponent]

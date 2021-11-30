@@ -1,21 +1,9 @@
 <div class="container-sm">
-  <div class="row">
-    <div class="text-end pos">Пользователь: {{auth.userInfo()}}</div>
-  </div>
   <h1 class="text-center">Список книг</h1>
-  <div class="input-group mb-3">
-    <input
-      type="text"
-      class="form-control"
-      placeholder="Поиск..."
-      aria-describedby="basic-addon1"
-      [(ngModel)]="searchStr"
-    >
-    <button class="btn btn-info"
-            (click)="searchBtn()"
-    >Найти
-    </button>
-  </div>
+  <app-filter
+    [nameFilter]="name"
+    (filterBook)="getList($event)"
+  ></app-filter>
   <table class="table table-hover">
     <thead class="table-info">
     <tr>
@@ -40,8 +28,7 @@
       <th>{{ book.description }}</th>
       <th>{{ book.read ? 'Да' : 'Нет' }}</th>
       <th *ngIf="auth.isAuthenticated()">
-        <button type="submit"
-                class="btn btn-info"
+        <button class="btn btn-info"
                 [routerLink]="['/books', 'edit', book.id]"
         >Редактировать
         </button>
@@ -53,7 +40,6 @@
     </tr>
     </tbody>
   </table>
-
   <div
     *ngIf="!books.length && isLoad"
     class="text-center display-6"
