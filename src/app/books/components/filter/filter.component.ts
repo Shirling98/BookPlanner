@@ -1,4 +1,7 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {ISearch} from '../../interfaces/bookInterface';
+import {ControllerService} from '../../services/controller.service';
 
 
 @Component({
@@ -8,19 +11,27 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 })
 export class FilterComponent implements OnInit {
 
-  @Input() nameFilter: string = ''
+  // @Input() nameFilter: string = ''
   @Output() filterBook: EventEmitter<string> = new EventEmitter<string>()
 
-  searchStr = '';
+  formFilter: FormGroup;
+  fName: string;
 
-  constructor() {
+
+  constructor(private formBuilder: FormBuilder,
+              private cs: ControllerService) {
   }
 
   ngOnInit(): void {
+    this.formFilter = this.formBuilder.group({
+      searchStr: ['']
+    })
+   this.cs.fName.subscribe(name => { this.fName = name})
   }
 
   searchBtn() {
-    this.filterBook.emit(this.searchStr)
-    this.searchStr = ''
+    const searchStr: ISearch = {...this.formFilter.value}
+    console.log(searchStr.searchStr);
+    this.filterBook.emit(searchStr.searchStr)
   }
 }

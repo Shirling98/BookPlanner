@@ -1,7 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {BookService} from "../../services/book.service";
-import {IBook} from "../../interfaces/bookInterface";
-import {AuthService} from "../../../auth/services/auth.service";
+
+import {BookService} from '../../services/book.service';
+import {IBook, IGenre} from '../../interfaces/bookInterface';
+import {AuthService} from '../../../auth/services/auth.service';
+
 
 @Component({
   selector: 'app-books-list',
@@ -13,12 +15,13 @@ export class BooksListComponent implements OnInit {
   books: IBook[] = []
   searchStr = '';
   isLoad = false;
-  genres: { [key: string]: string } = {}
-  name: string = 'Поиск по наименованию книги'
+  genres: { [key: string]: IGenre } = {};
+
+  //name: string = 'Поиск по наименованию книги'
 
   constructor(
     private bookService: BookService,
-    public auth: AuthService) {
+    public auth: AuthService,) {
   }
 
   ngOnInit() {
@@ -53,4 +56,5 @@ export class BooksListComponent implements OnInit {
   getList(str: string) {
     this.getBooks(str)
   }
+
 }

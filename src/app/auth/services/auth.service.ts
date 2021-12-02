@@ -1,12 +1,13 @@
-import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
-import {IUser} from "../interfaces/interface";
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {IUser} from '../interfaces/interface';
+import {AngularFireAuth} from '@angular/fire/compat/auth';
+import {getAuth, signInWithEmailAndPassword, signInWithPopup} from '@angular/fire/auth';
+import {Router} from '@angular/router';
+
 import 'firebase/auth';
-import {AngularFireAuth} from "@angular/fire/compat/auth";
-import {getAuth, signInWithEmailAndPassword, signInWithPopup} from "@angular/fire/auth";
-import firebase from "firebase/compat/app";
-import {Router} from "@angular/router";
-import {environment} from "../../../environments/environment";
+import firebase from 'firebase/compat/app';
+import {environment} from '../../../environments/environment';
 
 //фиксит ошибку Firebase: No Firebase App '[DEFAULT]' has been created angular
 firebase.initializeApp(environment.firebase);

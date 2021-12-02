@@ -1,10 +1,12 @@
-import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
-import {FbCreateResponse, IBook, IGenre} from "../interfaces/bookInterface";
-import {environment} from "../../../environments/environment";
-import {map} from "rxjs/operators";
-import {AngularFireDatabase} from "@angular/fire/compat/database";
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {AngularFireDatabase} from '@angular/fire/compat/database';
+
+import {Observable} from 'rxjs';
+import {FbCreateResponse, IBook, IGenre, IGenres} from '../interfaces/bookInterface';
+import {environment} from '../../../environments/environment';
+import {map} from 'rxjs/operators';
+
 
 @Injectable({providedIn: 'root'})
 export class BookService {
@@ -22,7 +24,7 @@ export class BookService {
       }));
   }
 
-  getGenres(): Observable<any[]> {
+  getGenres(): Observable<IGenres[]> {
     return this.db.list<IGenre>('genreList').snapshotChanges()
       .pipe(map((response) => {
         return response.map((genre) => {
@@ -34,7 +36,7 @@ export class BookService {
       }))
   }
 
-  getBooks(search: string): Observable<any[]> {
+  getBooks(search: string): Observable<IBook[]> {
     return this.db.list<IBook>('books', (ref) => this.booksFilter(ref, search)).snapshotChanges()
       .pipe(map((response) => {
         return response.map((book) => {

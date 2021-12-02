@@ -1,10 +1,11 @@
-<h5>{{nameFilter}}</h5>
+<h5>{{fName}}</h5>
+<form [formGroup]="formFilter">
 <div class="input-group mb-3">
   <input
     type="text"
     class="form-control"
     placeholder="Поиск..."
-    [(ngModel)]="searchStr"
+    formControlName="searchStr"
   >
   <button
     class="btn btn-info"
@@ -12,5 +13,6 @@
   >Найти
   </button>
 </div>
+</form>
 
 

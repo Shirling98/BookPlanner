@@ -1,11 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AngularFireDatabase} from "@angular/fire/compat/database";
-import {EMPTY, Observable} from "rxjs";
-import {IBook, IGenre} from "../../interfaces/bookInterface";
-import {BookService} from "../../services/book.service";
-import {ActivatedRoute, Router} from "@angular/router";
-import {catchError} from "rxjs/operators";
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AngularFireDatabase} from '@angular/fire/compat/database';
+import {EMPTY, Observable} from 'rxjs';
+import {IBook, IGenres} from '../../interfaces/bookInterface';
+import {BookService} from '../../services/book.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {catchError} from 'rxjs/operators';
 
 
 @Component({
@@ -16,7 +16,7 @@ import {catchError} from "rxjs/operators";
 export class BookComponent implements OnInit {
 
   formBook!: FormGroup
-  getGenres: Observable<IGenre[]> = EMPTY
+  getGenres: Observable<IGenres[]> = EMPTY
   book: IBook[] = []
   submitted = false
   bookId = ''
@@ -63,7 +63,9 @@ export class BookComponent implements OnInit {
   }
 
   submit() {
+
     const formData: IBook = {...this.formBook.value}
+    console.log(formData);
     this.submitted = true
 
     if (this.bookId) {

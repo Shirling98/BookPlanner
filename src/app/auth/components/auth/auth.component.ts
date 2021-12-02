@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AuthService} from "../../services/auth.service";
-import {IUser} from "../../interfaces/interface";
-import {AngularFireAuth} from "@angular/fire/compat/auth";
+import {AngularFireAuth} from '@angular/fire/compat/auth';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+
+import {AuthService} from '../../services/auth.service';
+import {IUser} from '../../interfaces/interface';
 
 
 @Component({

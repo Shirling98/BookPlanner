@@ -15,3 +15,12 @@ export interface IGenre {
   key: number
   val: string
 }
+
+export interface IGenres {
+  val: IGenre
+  key: string
+}
+
+export interface ISearch {
+  searchStr: string
+}
