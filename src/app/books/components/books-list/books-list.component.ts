@@ -4,7 +4,8 @@ import {BookService} from '../../services/book.service';
 import {IBook, IGenre} from '../../interfaces/bookInterface';
 import {AuthService} from '../../../auth/services/auth.service';
 import {ControllerService} from '../../services/controller.service';
-import {Subscription} from 'rxjs';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
 
 @Component({
@@ -20,11 +21,7 @@ export class BooksListComponent implements OnInit, OnDestroy {
   genres: { [key: string]: IGenre } = {};
   fName: string;
   name: string = 'Поиск по наименованию книги'
-  subscriptions: Subscription[] = [];
-  sub1: Subscription;
-  sub2: Subscription;
-  sub3: Subscription;
-  sub4: Subscription;
+  unsub = new Subject();
 
   constructor(
     private bookService: BookService,
@@ -36,17 +33,13 @@ export class BooksListComponent implements OnInit, OnDestroy {
     this.getBooks();
     this.getGenres();
     this.cs.filterName(this.name)
-    this.sub1 = this.cs.searchStr$.subscribe(str => {
+    this.cs.searchStr$.pipe(takeUntil(this.unsub)).subscribe(str => {
       this.getList(str)
     })
-    this.subscriptions.push(this.sub1);
-    this.subscriptions.push(this.sub2);
-    this.subscriptions.push(this.sub3);
-    this.subscriptions.push(this.sub4);
   }
 
   getGenres() {
-    this.sub2 = this.bookService.getGenres().subscribe((genres) => {
+   this.bookService.getGenres().pipe(takeUntil(this.unsub)).subscribe((genres) => {
       genres
         .map((genre) => {
           this.genres[genre.key] = genre.val
@@ -55,7 +48,7 @@ export class BooksListComponent implements OnInit, OnDestroy {
   }
 
   getBooks(str: string = '') {
-    this.sub3 = this.bookService.getBooks(str).subscribe((books) => {
+    this.bookService.getBooks(str).pipe(takeUntil(this.unsub)).subscribe((books) => {
       this.isLoad = true
       this.books = books
     })
@@ -63,7 +56,7 @@ export class BooksListComponent implements OnInit, OnDestroy {
 
   removeBook(id: string | undefined) {
     if (id) {
-      this.sub4 = this.bookService.remove(id).subscribe(() => {
+      this.bookService.remove(id).pipe(takeUntil(this.unsub)).subscribe(() => {
         this.getBooks()
       })
     }
@@ -74,6 +67,7 @@ export class BooksListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach((sub) => sub.unsubscribe())
+    this.unsub.next();
+    this.unsub.complete();
   }
 }
