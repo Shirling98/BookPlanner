@@ -50,6 +50,5 @@ export class AuthComponent implements OnInit {
       this.submitted = false
     }
     this.auth.login(user)
-
   }
 }

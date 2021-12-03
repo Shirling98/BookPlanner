@@ -21,7 +21,7 @@ export class BooksListComponent implements OnInit, OnDestroy {
   genres: { [key: string]: IGenre } = {};
   fName: string;
   name: string = 'Поиск по наименованию книги'
-  unsub = new Subject();
+  unsub$ = new Subject();
 
   constructor(
     private bookService: BookService,
@@ -33,13 +33,13 @@ export class BooksListComponent implements OnInit, OnDestroy {
     this.getBooks();
     this.getGenres();
     this.cs.filterName(this.name)
-    this.cs.searchStr$.pipe(takeUntil(this.unsub)).subscribe(str => {
+    this.cs.searchStr$.pipe(takeUntil(this.unsub$)).subscribe(str => {
       this.getList(str)
     })
   }
 
   getGenres() {
-   this.bookService.getGenres().pipe(takeUntil(this.unsub)).subscribe((genres) => {
+   this.bookService.getGenres().pipe(takeUntil(this.unsub$)).subscribe((genres) => {
       genres
         .map((genre) => {
           this.genres[genre.key] = genre.val
@@ -48,7 +48,7 @@ export class BooksListComponent implements OnInit, OnDestroy {
   }
 
   getBooks(str: string = '') {
-    this.bookService.getBooks(str).pipe(takeUntil(this.unsub)).subscribe((books) => {
+    this.bookService.getBooks(str).pipe(takeUntil(this.unsub$)).subscribe((books) => {
       this.isLoad = true
       this.books = books
     })
@@ -56,7 +56,7 @@ export class BooksListComponent implements OnInit, OnDestroy {
 
   removeBook(id: string | undefined) {
     if (id) {
-      this.bookService.remove(id).pipe(takeUntil(this.unsub)).subscribe(() => {
+      this.bookService.remove(id).pipe(takeUntil(this.unsub$)).subscribe(() => {
         this.getBooks()
       })
     }
@@ -67,7 +67,7 @@ export class BooksListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.unsub.next();
-    this.unsub.complete();
+    this.unsub$.next();
+    this.unsub$.complete();
   }
 }
