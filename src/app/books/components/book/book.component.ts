@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AngularFireDatabase} from '@angular/fire/compat/database';
-import {EMPTY, Observable} from 'rxjs';
+import {EMPTY, Observable, Subscription} from 'rxjs';
 import {IBook, IGenres} from '../../interfaces/bookInterface';
 import {BookService} from '../../services/book.service';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -13,14 +13,19 @@ import {catchError} from 'rxjs/operators';
   templateUrl: './book.component.html',
   styleUrls: ['./book.component.scss']
 })
-export class BookComponent implements OnInit {
+export class BookComponent implements OnInit, OnDestroy {
 
-  formBook!: FormGroup
-  getGenres: Observable<IGenres[]> = EMPTY
-  book: IBook[] = []
-  submitted = false
-  bookId = ''
-  isCreate = false
+  formBook!: FormGroup;
+  getGenres: Observable<IGenres[]> = EMPTY;
+  book: IBook[] = [];
+  submitted = false;
+  bookId = '';
+  isCreate = false;
+  subscriptions: Subscription[] = [];
+  sub1: Subscription;
+  sub2: Subscription;
+  sub3: Subscription;
+  sub4: Subscription;
 
 
   constructor(
@@ -43,7 +48,7 @@ export class BookComponent implements OnInit {
       read: [false, Validators.required],
     })
 
-    this.route.params
+    this.sub1 = this.route.params
       .subscribe((params) => {
         this.bookId = params.id
         if (this.bookId) {
@@ -51,10 +56,14 @@ export class BookComponent implements OnInit {
           this.getBook()
         }
       })
+    this.subscriptions.push(this.sub1);
+    this.subscriptions.push(this.sub2);
+    this.subscriptions.push(this.sub3);
+    this.subscriptions.push(this.sub4);
   }
 
   getBook() {
-    this.bookService.getById(this.bookId)
+    this.sub2 = this.bookService.getById(this.bookId)
       .subscribe((book) => {
         this.formBook.patchValue({
           ...book
@@ -63,13 +72,12 @@ export class BookComponent implements OnInit {
   }
 
   submit() {
-
     const formData: IBook = {...this.formBook.value}
     console.log(formData);
     this.submitted = true
 
     if (this.bookId) {
-      this.bookService.update({
+     this.sub3 = this.bookService.update({
         id: this.bookId,
         ...formData
 
@@ -84,9 +92,13 @@ export class BookComponent implements OnInit {
       })
 
     } else {
-      this.bookService.create(formData).subscribe(() => {
+      this.sub4 = this.bookService.create(formData).subscribe(() => {
         this.formBook.reset()
       })
     }
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach((subscriptions) => subscriptions.unsubscribe())
   }
 }

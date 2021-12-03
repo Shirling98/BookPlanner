@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
+import {Injectable} from '@angular/core';
+import {BehaviorSubject, Subject} from 'rxjs';
 
 
 @Injectable({
@@ -7,15 +7,25 @@ import {BehaviorSubject} from 'rxjs';
 })
 export class ControllerService {
 
-  private nameFilter = new BehaviorSubject<string>("Поиск по наименованию книги");
-  fName = this.nameFilter.asObservable();
+  private _nameFilter$ = new BehaviorSubject<string>('Поиск');
+  readonly nameFilter$ = this._nameFilter$.asObservable();
 
-  constructor() { }
+  private _searchStr$ = new Subject<string>();
+  searchStr$ = this._searchStr$.asObservable()
 
-  filterName(fName: string) {
-    this.nameFilter.next(fName);
+  //_test$ = new Subject<string>();
+
+
+  constructor() {
   }
 
+  search(str: string) {
+    this._searchStr$.next(str)
+  }
+
+  filterName(fName: string) {
+    this._nameFilter$.next(fName);
+  }
 }
 
 
