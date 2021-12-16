@@ -9,6 +9,7 @@ import {BookComponent} from "./components/book/book.component";
 import {BooksListComponent} from './components/books-list/books-list.component';
 import {AuthModule} from "../auth/auth.module";
 import {FilterComponent} from './components/filter/filter.component';
+import { BookViewComponent } from './components/book-view/book-view.component';
 
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['/auth']);
@@ -18,6 +19,7 @@ const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['/auth']);
     BookComponent,
     BooksListComponent,
     FilterComponent,
+    BookViewComponent,
   ],
   imports: [
     CommonModule,
@@ -38,7 +40,8 @@ const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['/auth']);
         component: BookComponent,
         canActivate: [AngularFireAuthGuard],
         data: {authGuardPipe: redirectUnauthorizedToLogin}
-      }
+      },
+      {path: 'view/:id', component: BookViewComponent},
     ])
   ],
   exports: [

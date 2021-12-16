@@ -11,7 +11,9 @@ import {map} from 'rxjs/operators';
 @Injectable({providedIn: 'root'})
 export class BookService {
 
-  constructor(private http: HttpClient, private db: AngularFireDatabase) {
+  constructor(
+    private http: HttpClient,
+    private db: AngularFireDatabase) {
   }
 
   create(book: IBook): Observable<IBook> {
@@ -23,6 +25,7 @@ export class BookService {
         }
       }));
   }
+
 
   getGenres(): Observable<IGenres[]> {
     return this.db.list<IGenre>('genreList').snapshotChanges()
@@ -54,6 +57,7 @@ export class BookService {
     }
     return ref
   }
+
 
   getById(id: string): Observable<IBook> {
     return this.http.get<IBook>(`${environment.firebase.databaseURL}/books/${id}.json`)

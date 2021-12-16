@@ -1,11 +1,14 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AngularFireDatabase} from '@angular/fire/compat/database';
-import {EMPTY, Observable, Subscription} from 'rxjs';
+import {ActivatedRoute, Router} from '@angular/router';
+import {AngularFireStorage} from '@angular/fire/compat/storage';
+import {EMPTY, Observable, Subject} from 'rxjs';
+
 import {IBook, IGenres} from '../../interfaces/bookInterface';
 import {BookService} from '../../services/book.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {catchError} from 'rxjs/operators';
+import {catchError, takeUntil} from 'rxjs/operators';
+import {AlertService} from '../../../shared/services/alert.service';
 
 
 @Component({
@@ -15,17 +18,17 @@ import {catchError} from 'rxjs/operators';
 })
 export class BookComponent implements OnInit, OnDestroy {
 
+  @ViewChild('bookCover') bookCover: ElementRef;
+
   formBook!: FormGroup;
   getGenres: Observable<IGenres[]> = EMPTY;
   book: IBook[] = [];
   submitted = false;
   bookId = '';
   isCreate = false;
-  subscriptions: Subscription[] = [];
-  sub1: Subscription;
-  sub2: Subscription;
-  sub3: Subscription;
-  sub4: Subscription;
+  unsub$ = new Subject();
+  coverUrl: Observable<string>;
+  uploadPercent: Observable<number>;
 
 
   constructor(
@@ -33,8 +36,11 @@ export class BookComponent implements OnInit, OnDestroy {
     private db: AngularFireDatabase,
     private bookService: BookService,
     private route: ActivatedRoute,
-    private router: Router
-  ) { }
+    private router: Router,
+    private alert: AlertService,
+    private storage: AngularFireStorage
+  ) {
+  }
 
   ngOnInit(): void {
     this.isCreate = true
@@ -45,10 +51,11 @@ export class BookComponent implements OnInit, OnDestroy {
       author: ['', Validators.required],
       genre: ['', Validators.required],
       description: ['', Validators.required],
-      read: [false, Validators.required],
+      cover: [''],
+      read: [false],
     })
 
-    this.sub1 = this.route.params
+    this.route.params.pipe(takeUntil(this.unsub$))
       .subscribe((params) => {
         this.bookId = params.id
         if (this.bookId) {
@@ -56,49 +63,91 @@ export class BookComponent implements OnInit, OnDestroy {
           this.getBook()
         }
       })
-    this.subscriptions.push(this.sub1);
-    this.subscriptions.push(this.sub2);
-    this.subscriptions.push(this.sub3);
-    this.subscriptions.push(this.sub4);
+  }
+
+  upload(event: any) {
+    if (event.target.files.length > 0) {
+      this.submitted = true
+      const file = event.target.files[0];
+      const filePath = `covers/${file.name}`;
+      this.formBook.get('cover').setValue(filePath);
+      const task = this.storage.upload(filePath, file);
+      this.uploadPercent = task.percentageChanges()
+      task
+        .then(() => {
+          this.submitted = false;
+          this.uploadPercent = new Observable<number>();
+          this.alert.success('Обложка загружена');
+        })
+        .catch((error) => {
+          if (error.code == 'storage/unknown') {
+            this.alert.danger('Неизвестная ошибка')
+          } else if (error.code == 'storage/no-default-bucket') {
+            this.alert.danger('В свойстве конфигурации не задан storageBucket')
+          }
+        })
+    } else {
+      this.alert.warning('Операция отменена пользователем')
+    }
+
   }
 
   getBook() {
-    this.sub2 = this.bookService.getById(this.bookId)
+    return this.bookService.getById(this.bookId).pipe(takeUntil(this.unsub$))
       .subscribe((book) => {
+        if (!book) {
+          this.router.navigate(['/books', 'list'])
+          this.alert.danger('Указанная книга не существует')
+          return
+        }
         this.formBook.patchValue({
           ...book
         })
+        const ref = this.storage.ref(book.cover);
+        this.coverUrl = ref.getDownloadURL()
+          .pipe(catchError((error) => {
+            console.log(error.code)
+            if (error.code == 'storage/object-not-found') {
+              this.alert.danger('Объект не найден')
+            } else if (error.code == 'storage/invalid-root-operation') {
+              this.alert.danger('У книги нет обложки')
+            }
+            return EMPTY
+          }))
       })
   }
 
   submit() {
-    const formData: IBook = {...this.formBook.value}
-    console.log(formData);
-    this.submitted = true
+    const formData: IBook = {...this.formBook.value};
+    this.submitted = true;
 
     if (this.bookId) {
-     this.sub3 = this.bookService.update({
+      this.bookService.update({
         id: this.bookId,
         ...formData
-
       })
-        .pipe(catchError( (error) => {
-          this.submitted = false
-          return error
+        .pipe(catchError((error) => {
+          this.submitted = false;
+          return error;
         }))
         .subscribe(async () => {
-        this.submitted = false
-        await this.router.navigate(['/books', 'list'])
-      })
-
+          this.submitted = false;
+          this.alert.success('Книга отредактирована');
+          await this.router.navigate(['/books', 'list']);
+        })
     } else {
-      this.sub4 = this.bookService.create(formData).subscribe(() => {
-        this.formBook.reset()
-      })
+      this.bookService.create(formData).pipe(takeUntil(this.unsub$))
+        .subscribe(() => {
+          this.submitted = false;
+          this.formBook.reset();
+          this.bookCover.nativeElement.value = '';
+          this.alert.success('Книга добавлена');
+        })
     }
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach((subscriptions) => subscriptions.unsubscribe())
+    this.unsub$.next();
+    this.unsub$.complete();
   }
 }

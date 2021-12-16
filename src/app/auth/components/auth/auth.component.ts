@@ -4,6 +4,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 import {AuthService} from '../../services/auth.service';
 import {IUser} from '../../interfaces/interface';
+import {AlertService} from '../../../shared/services/alert.service';
 
 
 @Component({
@@ -13,13 +14,15 @@ import {IUser} from '../../interfaces/interface';
 })
 export class AuthComponent implements OnInit {
 
-  formAuth!: FormGroup
-  submitted = false
+  formAuth!: FormGroup;
+  submitted = false;
+  errMess: string = '';
 
   constructor(
     private formBuilder: FormBuilder,
     public auth: AuthService,
     public afAuth: AngularFireAuth,
+    private alert: AlertService
   ) {
   }
 
@@ -44,11 +47,14 @@ export class AuthComponent implements OnInit {
   submit() {
     this.submitted = true
     const user: IUser = {...this.formAuth.value}
-    if (this.formAuth.invalid) {
-      return
-    } else {
-      this.submitted = false
-    }
     this.auth.login(user)
+      .catch((error) => {
+        this.submitted = false
+        if (error.code == 'auth/user-not-found') {
+          this.alert.danger('Некорректный email')
+        } else if (error.code == 'auth/wrong-password') {
+          this.alert.danger('Неверный пароль')
+        }
+      })
   }
 }

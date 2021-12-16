@@ -1,7 +1,7 @@
-<!--    [nameFilter]="name"-->
 <div class="container-sm">
   <h1 class="text-center">Список книг</h1>
   <app-filter
+    [nameFilter]="name"
   ></app-filter>
   <table class="table table-hover">
     <thead class="table-info">
@@ -14,8 +14,9 @@
       <th scope="col">Прочитана?</th>
       <th
         *ngIf="auth.isAuthenticated()"
-        scope="col">Действие
+        scope="col">Действия
       </th>
+      <th scope="col"></th>
     </tr>
     </thead>
     <tbody>
@@ -34,6 +35,12 @@
         <button class="btn btn-info"
                 (click)="removeBook(book.id)"
         >Удалить
+        </button>
+      </th>
+      <th>
+        <button class="btn btn-info"
+                [routerLink]="['/books', 'view', book.id]"
+        >Просмотр книги
         </button>
       </th>
     </tr>

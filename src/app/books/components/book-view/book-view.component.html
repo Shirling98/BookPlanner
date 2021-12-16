@@ -1,0 +1,52 @@
+<h1 class="text-center">Просмотр книги</h1>
+<div class="container">
+  <form [formGroup]="formBook">
+    <fieldset disabled>
+      <div class="mb-3">
+        <label for="nameBook" class="form-label">Название книги</label>
+        <input type="text" class="form-control" id="nameBook" formControlName="name">
+      </div>
+      <div class="mb-3">
+        <label for="authorBook" class="form-label">Автор книги</label>
+        <input type="text" class="form-control" id="authorBook" formControlName="author">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Жанр книги</label>
+        <select
+          class="form-select"
+          aria-label="Default select example"
+          formControlName="genre"
+        >
+          <option selected>Выберите жанр книги</option>
+          <option
+            *ngFor="let g of getGenres | async"
+            [ngValue]="g.key"
+          >
+            {{ g.val }}
+          </option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="descriptionBook" class="form-label">Описание книги</label>
+        <textarea class="form-control" id="descriptionBook" rows="3" formControlName="description"></textarea>
+      </div>
+      <div *ngIf="coverUrl | async as cover">
+        <div class="mb-3">
+          <label class="form-label">Обложка книги</label>
+        </div>
+        <img class="img" [src]="cover" *ngIf="cover">
+      </div>
+      <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" id="readBook" formControlName="read">
+        <label class="form-check-label" for="readBook">Книга прочитана</label>
+      </div>
+    </fieldset>
+    <button
+      type="button"
+      class="btn btn-primary"
+      [routerLink]="['/books', 'list']"
+    >К списку книг
+    </button>
+  </form>
+</div>
+

@@ -4,6 +4,7 @@ export interface IBook {
   genre: string
   description: string
   read: boolean
+  cover?: string
   id?: string
 }
 

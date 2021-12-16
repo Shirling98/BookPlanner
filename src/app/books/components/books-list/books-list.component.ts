@@ -6,6 +6,7 @@ import {AuthService} from '../../../auth/services/auth.service';
 import {ControllerService} from '../../services/controller.service';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
+import {AlertService} from '../../../shared/services/alert.service';
 
 
 @Component({
@@ -26,20 +27,20 @@ export class BooksListComponent implements OnInit, OnDestroy {
   constructor(
     private bookService: BookService,
     public auth: AuthService,
-    private cs: ControllerService) {
+    private cs: ControllerService,
+    private alert: AlertService) {
   }
 
   ngOnInit() {
     this.getBooks();
     this.getGenres();
-    this.cs.filterName(this.name)
     this.cs.searchStr$.pipe(takeUntil(this.unsub$)).subscribe(str => {
       this.getList(str)
     })
   }
 
   getGenres() {
-   this.bookService.getGenres().pipe(takeUntil(this.unsub$)).subscribe((genres) => {
+    this.bookService.getGenres().pipe(takeUntil(this.unsub$)).subscribe((genres) => {
       genres
         .map((genre) => {
           this.genres[genre.key] = genre.val
@@ -58,6 +59,7 @@ export class BooksListComponent implements OnInit, OnDestroy {
     if (id) {
       this.bookService.remove(id).pipe(takeUntil(this.unsub$)).subscribe(() => {
         this.getBooks()
+        this.alert.warning('Книга удалена')
       })
     }
   }

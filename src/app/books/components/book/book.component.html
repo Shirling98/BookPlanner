@@ -29,6 +29,22 @@
       <label for="descriptionBook" class="form-label">Описание книги</label>
       <textarea class="form-control" id="descriptionBook" rows="3" formControlName="description"></textarea>
     </div>
+    <div class="mb-3">
+      <label for="formFile" class="form-label">Обложка книги</label>
+      <input #bookCover class="form-control" type="file" id="formFile" accept=".png, .jpg" (change)="upload($event)">
+    </div>
+    <div *ngIf="coverUrl | async as cover">
+      <img class="img" [src]="cover" *ngIf="cover">
+    </div>
+    <ng-container *ngIf="uploadPercent | async as progress">
+      <div class="progress">
+        <div
+          class="progress-bar bg-info"
+          [ngStyle]="{ 'width': progress + '%' }"
+        > {{ progress | number: '0.0-0'}} %
+        </div>
+      </div>
+    </ng-container>
     <div class="mb-3 form-check">
       <input type="checkbox" class="form-check-input" id="readBook" formControlName="read">
       <label class="form-check-label" for="readBook">Книга прочитана</label>
